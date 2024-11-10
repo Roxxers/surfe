@@ -20,6 +20,18 @@ type MemoryDatabase struct {
 	ActionsUserIDIndex ActionUserIDIndex
 }
 
+func (db *MemoryDatabase) GetUser(userID uint64) domain.User {
+	return db.Users[userID]
+}
+
+func (db *MemoryDatabase) GetActionsForUser(userID uint64) []domain.Action {
+	return db.ActionsUserIDIndex[userID]
+}
+
+func (db *MemoryDatabase) GetAction(actionId uint64) domain.Action {
+	return db.Actions[actionId]
+}
+
 func LoadMemoryDatabase() *MemoryDatabase {
 	userTable, err := loadUsers()
 	if err != nil {
