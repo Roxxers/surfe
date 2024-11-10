@@ -8,9 +8,9 @@ import (
 	"github.com/roxxers/surfe-techtest/internal/core/domain"
 )
 
-type UserTable = map[uint64]domain.User
-type ActionTable = map[uint64]domain.Action
-type ActionUserIDIndex = map[uint64][]domain.Action
+type UserTable = map[int64]domain.User
+type ActionTable = map[int64]domain.Action
+type ActionUserIDIndex = map[int64][]domain.Action
 
 // ActionsUserIDIndex Is a simulation of indexing actions on the UserID of the action. We will use this for later functions.
 
@@ -20,15 +20,15 @@ type MemoryDatabase struct {
 	ActionsUserIDIndex ActionUserIDIndex
 }
 
-func (db *MemoryDatabase) GetUser(userID uint64) domain.User {
+func (db *MemoryDatabase) GetUser(userID int64) domain.User {
 	return db.Users[userID]
 }
 
-func (db *MemoryDatabase) GetActionsForUser(userID uint64) []domain.Action {
+func (db *MemoryDatabase) GetActionsForUser(userID int64) []domain.Action {
 	return db.ActionsUserIDIndex[userID]
 }
 
-func (db *MemoryDatabase) GetAction(actionId uint64) domain.Action {
+func (db *MemoryDatabase) GetAction(actionId int64) domain.Action {
 	return db.Actions[actionId]
 }
 
