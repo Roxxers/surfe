@@ -21,3 +21,8 @@ func (s *Service) FetchUser(userId uint64) *domain.User {
 		CreatedAt: user.CreatedAt,
 	}
 }
+
+func (s *Service) GetUserActionCount(userId uint64) int32 {
+	actions := s.db.GetActionsForUser(userId)
+	return int32(len(actions))
+}
