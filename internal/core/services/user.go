@@ -8,6 +8,12 @@ import (
 	"github.com/roxxers/surfe-techtest/internal/ports"
 )
 
+// In a larger program this would hopefully be somewhere easier to manage like a file of constants shared for the program.
+// For this example, it is only used here so we will define it here.
+const (
+	REFER_USER_ACTION = "REFER_USER"
+)
+
 type Service struct {
 	db ports.Database
 }
@@ -97,7 +103,7 @@ func (s *Service) CalculateAllUserReferalIndexes() map[int64]int {
 		childCount := 0
 
 		for _, action := range actionsPerUser[userId] {
-			if action.Type == "REFER_USER" {
+			if action.Type == REFER_USER_ACTION {
 				if userId != action.TargetUserId {
 					// Dataset includes actions with users that refer themselves.
 					// 802 being a prime example
