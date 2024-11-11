@@ -59,10 +59,11 @@ func (s *Service) CalculateNextActionProbablity(actionType string) map[string]fl
 					// This is the last action of the user, cannot check the next one
 					continue
 				}
-				if _, ok := nextActions[action.Type]; !ok {
-					nextActions[action.Type] = 0
+				nextAction := actions[i+1]
+				if _, ok := nextActions[nextAction.Type]; !ok {
+					nextActions[nextAction.Type] = 0
 				}
-				nextActions[actions[i+1].Type]++
+				nextActions[nextAction.Type]++
 				totalActions++
 			}
 		}
