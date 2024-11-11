@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	db := secondary.LoadMemoryDatabase()
+	db := secondary.NewMemoryDatabase()
 	s := services.NewService(db)
 	http := primary.NewHTTPServer(db, s)
 	http.Serve("127.0.0.1:8080") // Replace with configurable variable in future

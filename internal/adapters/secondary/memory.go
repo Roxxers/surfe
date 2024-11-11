@@ -40,7 +40,7 @@ func (db *MemoryDatabase) GetActionsPerUser() map[int64][]domain.Action {
 	return db.ActionsUserIDIndex
 }
 
-func LoadMemoryDatabase() *MemoryDatabase {
+func NewMemoryDatabase() *MemoryDatabase {
 	userTable, err := loadUsers()
 	if err != nil {
 		panic(err)
