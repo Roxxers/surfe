@@ -23,7 +23,7 @@ All of the API is mounted to the path `/api/v1`. If you see an endpoint listed b
 
 ##### Example
 ```sh
-> curl 127.0.0.1:8080/api/v1/user/:1
+> curl 127.0.0.1:8080/api/v1/user/1
 {"id":0,"name":"Allyson","created_at":"0001-01-01T00:00:00Z"}
 ```
 
@@ -35,7 +35,7 @@ All of the API is mounted to the path `/api/v1`. If you see an endpoint listed b
 
 ##### Example
 ```sh
-> curl 127.0.0.1:8080/api/v1/user/:1/actioncount
+> curl 127.0.0.1:8080/api/v1/user/1/actioncount
 {"count":49}
 ```
 
