@@ -16,6 +16,7 @@ func NewService(db ports.Database) *Service {
 	return &Service{db: db}
 }
 
+// Fetch user returns a domain.User from storage
 func (s *Service) FetchUser(userId int64) *domain.User {
 	user := s.db.GetUser(userId)
 	return &domain.User{
@@ -25,6 +26,7 @@ func (s *Service) FetchUser(userId int64) *domain.User {
 	}
 }
 
+// GetUserActionCount returns the total number of actions for the specified user
 func (s *Service) GetUserActionCount(userId int64) int32 {
 	actions := s.db.GetActionsForUser(userId)
 	return int32(len(actions))
