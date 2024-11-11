@@ -32,6 +32,14 @@ func (db *MemoryDatabase) GetAction(actionId int64) domain.Action {
 	return db.Actions[actionId]
 }
 
+func (db *MemoryDatabase) GetAllUsers() map[int64]domain.User {
+	return db.Users
+}
+
+func (db *MemoryDatabase) GetActionsPerUser() map[int64][]domain.Action {
+	return db.ActionsUserIDIndex
+}
+
 func LoadMemoryDatabase() *MemoryDatabase {
 	userTable, err := loadUsers()
 	if err != nil {
