@@ -2,10 +2,17 @@ package secondary
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"os"
 
 	"github.com/roxxers/surfe-techtest/internal/core/domain"
+)
+
+var (
+	ErrNoSuchUserID     = errors.New("user with that id does not exist")
+	ErrNoSuchActionID   = errors.New("action with that id does not exist")
+	ErrNoSuchActionType = errors.New("action with that type does not exist")
 )
 
 type UserTable = map[int64]domain.User
@@ -20,16 +27,25 @@ type MemoryDatabase struct {
 	ActionsUserIDIndex ActionUserIDIndex
 }
 
-func (db *MemoryDatabase) GetUser(userID int64) domain.User {
-	return db.Users[userID]
+func (db *MemoryDatabase) GetUser(userID int64) (domain.User, error) {
+	if _, ok := db.Users[userID]; !ok {
+		return domain.User{}, ErrNoSuchUserID
+	}
+	return db.Users[userID], nil
 }
 
-func (db *MemoryDatabase) GetActionsForUser(userID int64) []domain.Action {
-	return db.ActionsUserIDIndex[userID]
+func (db *MemoryDatabase) GetActionsForUser(userID int64) ([]domain.Action, error) {
+	if _, ok := db.ActionsUserIDIndex[userID]; !ok {
+		return nil, ErrNoSuchUserID
+	}
+	return db.ActionsUserIDIndex[userID], nil
 }
 
-func (db *MemoryDatabase) GetAction(actionId int64) domain.Action {
-	return db.Actions[actionId]
+func (db *MemoryDatabase) GetAction(actionId int64) (domain.Action, error) {
+	if _, ok := db.Actions[actionId]; !ok {
+		return domain.Action{}, ErrNoSuchActionID
+	}
+	return db.Actions[actionId], nil
 }
 
 func (db *MemoryDatabase) GetAllUsers() map[int64]domain.User {

@@ -1,11 +1,17 @@
 package primary
 
 import (
+	"errors"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/roxxers/surfe-techtest/internal/core/services"
+)
+
+var (
+	ErrUserNotFound  = errors.New("User not found")
+	ErrInvalidUserId = errors.New("Invalid user ID")
 )
 
 // Using one controller here but we would likely seperate them depending on how we structured our API layer.
@@ -35,10 +41,14 @@ func (c *Controller) FetchUser(ctx *gin.Context) {
 	userId, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		// Would be better to used defined errors here
-		ctx.JSON(400, gin.H{"error": "Invalid user ID"})
+		ctx.JSON(400, gin.H{"error": ErrInvalidUserId.Error()})
 		return
 	}
-	user := c.service.FetchUser(int64(userId))
+	user, err := c.service.FetchUser(int64(userId))
+	if err != nil {
+		ctx.JSON(404, gin.H{"error": ErrUserNotFound.Error()})
+		return
+	}
 
 	// Using a type here and explicitly naming wanted keys as to not leak whole user table
 	response := FetchUserResponse{
@@ -56,11 +66,15 @@ func (c *Controller) GetUserActionCount(ctx *gin.Context) {
 	userId, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		// Would be better to used defined errors here
-		ctx.JSON(400, gin.H{"error": "Invalid user ID"})
+		ctx.JSON(400, gin.H{"error": ErrInvalidUserId.Error()})
 		return
 	}
 
-	count := c.service.GetUserActionCount(int64(userId))
+	count, err := c.service.GetUserActionCount(int64(userId))
+	if err != nil {
+		ctx.JSON(404, gin.H{"error": ErrUserNotFound.Error()})
+		return
+	}
 
 	response := UserActionCountResponse{
 		Count: count,
@@ -73,7 +87,13 @@ func (c *Controller) CalculateNextActionProbablity(ctx *gin.Context) {
 	var actionRequest ActionRequest
 	ctx.BindJSON(&actionRequest)
 
-	probabilities := c.service.CalculateNextActionProbablity(actionRequest.ActionType)
+	probabilities, err := c.service.CalculateNextActionProbablity(actionRequest.ActionType)
+
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "could not find probablites: " + err.Error()})
+		return
+	}
+
 	// Already formatted in the wanted way
 	ctx.JSON(200, probabilities)
 }
