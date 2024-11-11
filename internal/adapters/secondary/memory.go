@@ -51,7 +51,7 @@ func LoadMemoryDatabase() *MemoryDatabase {
 }
 
 func loadUsers() (UserTable, error) {
-	file, err := os.Open("./users.json")
+	file, err := os.Open("./internal/adapters/secondary/users.json") // Hardcoded for ease
 	defer file.Close()
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func loadUsers() (UserTable, error) {
 
 	// O(n) on number of users but we are doing it at startup
 	// Would not need to do this for an actual inProd program
-	var userTable UserTable
+	userTable := make(UserTable)
 	for _, user := range users {
 		userTable[user.Id] = user
 	}
@@ -72,7 +72,7 @@ func loadUsers() (UserTable, error) {
 
 // Mostly copied pasted function, could make it generic but no need to do so for this test.
 func loadActions() (ActionTable, ActionUserIDIndex, error) {
-	file, err := os.Open("./action.json")
+	file, err := os.Open("./internal/adapters/secondary/actions.json")
 	defer file.Close()
 	if err != nil {
 		return nil, nil, err
@@ -83,7 +83,7 @@ func loadActions() (ActionTable, ActionUserIDIndex, error) {
 
 	// O(n) on number of users but we are doing it at startup
 	// Would not need to do this for an actual inProd program
-	var actionTable ActionTable
+	actionTable := make(ActionTable)
 	for _, action := range actions {
 		actionTable[action.Id] = action
 	}
@@ -94,7 +94,7 @@ func loadActions() (ActionTable, ActionUserIDIndex, error) {
 }
 
 func createActionsUserIdIndex(actions []domain.Action) ActionUserIDIndex {
-	var actionsUserIDIndex ActionUserIDIndex
+	actionsUserIDIndex := make(ActionUserIDIndex)
 	for _, action := range actions {
 		actionsUserIDIndex[action.UserId] = append(actionsUserIDIndex[action.UserId], action)
 	}
